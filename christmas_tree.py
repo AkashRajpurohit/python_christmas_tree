@@ -5,6 +5,8 @@ import random
 import os
 import time
 
+mutex = threading.Lock()
+
 tree = list(open('christmas_tree.txt').read().rstrip())
 
 def colored_dot(color):
@@ -24,8 +26,12 @@ def lights(color, indexes):
 		for idx in indexes:
 			tree[idx] = colored_dot(color) if off else '●'
 
+			mutex.acquire()
+			# Critical Section to maintain atomic operation
 			os.system('cls' if os.name == 'nt' else 'clear')
 			print(''.join(tree))
+
+			mutex.release()
 
 			off = not off
 
